@@ -19,13 +19,26 @@ export function useTheme() {
     return isDark.value ? darkTheme : undefined
   })
 
+  const commonColor: Object  = {
+    primaryColor: '#543BEF',
+    primaryColorHover: '#543BEF',
+    primaryColorPressed: '#543BEF',
+    warningColor: '#543BEF',
+    warningColorHover: '#543BEF',
+    warningColorPressed: '#543BEF',
+    warningColorSuppl: '#543BEF',
+  }
+
+  // 主题切换
   const themeOverrides = computed<GlobalThemeOverrides>(() => {
     if (isDark.value) {
       return {
-        common: {},
+        common: commonColor,
       }
     }
-    return {}
+    return {
+      common: commonColor,
+}
   })
 
   watch(
