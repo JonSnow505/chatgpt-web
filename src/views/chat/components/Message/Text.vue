@@ -42,8 +42,8 @@ const wrapClass = computed(() => {
     'min-w-[20px]',
     'rounded-md',
     isMobile.value ? 'p-2' : 'px-3 py-2',
-    props.inversion ? 'bg-[#d2f9d1]' : 'bg-[#f4f6f8]',
-    props.inversion ? 'dark:bg-[#a1dc95]' : 'dark:bg-[#1e1e20]',
+    props.inversion ? 'bg-[#543BEF]' : 'bg-[#f4f6f8]',
+    props.inversion ? 'dark:bg-[#543BEF]' : 'dark:bg-[#1e1e20]',
     props.inversion ? 'message-request' : 'message-reply',
     { 'text-red-500': props.error },
   ]
@@ -74,7 +74,7 @@ defineExpose({ textRef })
           <div v-if="!asRawText" class="markdown-body" v-html="text" />
           <div v-else class="whitespace-pre-wrap" v-text="text" />
         </div>
-        <div v-else class="whitespace-pre-wrap" v-text="text" />
+        <div v-else class="whitespace-pre-wrap text-[#ffffff]" v-text="text" />
       </div>
     </template>
   </div>

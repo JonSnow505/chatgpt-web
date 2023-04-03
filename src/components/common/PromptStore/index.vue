@@ -1,12 +1,13 @@
 <script setup lang='ts'>
 import type { DataTableColumns } from 'naive-ui'
-import { computed, h, ref, watch } from 'vue'
+import { computed, h,ref, watch } from 'vue'
 import { NButton, NCard, NDataTable, NDivider, NInput, NList, NListItem, NModal, NPopconfirm, NSpace, NTabPane, NTabs, NThing, useMessage } from 'naive-ui'
 import PromptRecommend from '../../../assets/recommend.json'
 import { SvgIcon } from '..'
-import { usePromptStore } from '@/store'
+import { usePromptStore, useSettingStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { t } from '@/locales'
+import { SettingsState } from '@/store/modules/settings/helper'
 
 interface DataProps {
   renderKey: string
@@ -45,7 +46,8 @@ const searchValue = ref<string>('')
 const { isMobile } = useBasicLayout()
 
 const promptStore = usePromptStore()
-
+const settingStore = useSettingStore()
+let systemMessage = ref(settingStore.systemMessage ?? '')
 // Prompt在线导入推荐List,根据部署者喜好进行修改(assets/recommend.json)
 const promptRecommendList = PromptRecommend
 const promptList = ref<any>(promptStore.promptList)
@@ -259,12 +261,48 @@ const pagination = computed(() => {
   }
 })
 
+const submitSetting = (value: Partial<SettingsState>) => {
+  if (systemMessage.value === value.systemMessage) {
+    return
+  }
+  settingStore.updateSetting(value)
+  systemMessage.value = value.systemMessage ?? ''
+  message.success(t('common.success'))
+}
+
 // table相关
 const createColumns = (): DataTableColumns<DataProps> => {
   return [
     {
       title: t('store.title'),
       key: 'renderKey',
+      render(row) {
+        return h('div', { class: 'flex gap-2 leading-7' }, {
+          default: () => [h(
+            NButton,
+            {
+              style: systemMessage.value === row.value ? {
+                background: '#543BEF',
+                color: '#ffffff'
+              } : {},
+              tertiary: true,
+              size: 'small',
+              type: 'info',
+              onClick: () => submitSetting({ systemMessage:row.value }),
+            },
+            { default: () => systemMessage.value === row.value ? '使用中' : '设定' },
+          ), h(
+            'div',
+            {
+              tertiary: true,
+              size: 'small',
+              type: 'info',
+            },
+            { default: () => row.renderKey },
+          ),
+          ],
+        })
+      },
     },
     {
       title: t('store.description'),
@@ -380,6 +418,15 @@ const dataSource = computed(() => {
           <NList v-if="isMobile" style="max-height: 400px; overflow-y: auto;">
             <NListItem v-for="(item, index) of dataSource" :key="index">
               <NThing :title="item.renderKey" :description="item.renderValue" />
+              <template #prefix>
+                  <div :class="systemMessage === item.renderValue ? 'bg-[#543BEF]' : ''">
+                    <NButton tertiary size="small" type="info" @click="submitSetting({ systemMessage: item.renderValue })">
+                      <span :class="systemMessage === item.renderValue ? 'text-[#ffffff]' : ''">
+                        {{ t(systemMessage === item.renderValue ? '使用中' : '设定') }}
+                      </span>
+                    </NButton>
+                  </div>
+                </template>
               <template #suffix>
                 <div class="flex flex-col items-center gap-2">
                   <NButton tertiary size="small" type="info" @click="changeShowModal('modify', item)">

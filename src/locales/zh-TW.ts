@@ -71,7 +71,8 @@ export default {
     balance: 'API余額',
   },
   store: {
-    siderButton: '提示詞商店',
+    siderShopButton: '提示詞商店',
+    siderSettingButton: '提示詞设定',
     local: '本機',
     online: '線上',
     title: '標題',

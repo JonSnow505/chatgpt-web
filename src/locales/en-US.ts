@@ -71,7 +71,8 @@ export default {
     balance: 'API Balance',
   },
   store: {
-    siderButton: 'Prompt Store',
+    siderShopButton: 'Prompt Store',
+    siderSettingButton: 'Prompt Setting',
     local: 'Local',
     online: 'Online',
     title: 'Title',
