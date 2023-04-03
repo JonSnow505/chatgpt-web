@@ -47,6 +47,7 @@ const { isMobile } = useBasicLayout()
 
 const promptStore = usePromptStore()
 const settingStore = useSettingStore()
+// 当前选中提示词
 let systemMessage = ref(settingStore.systemMessage ?? '')
 // Prompt在线导入推荐List,根据部署者喜好进行修改(assets/recommend.json)
 const promptRecommendList = PromptRecommend
@@ -419,10 +420,10 @@ const dataSource = computed(() => {
             <NListItem v-for="(item, index) of dataSource" :key="index">
               <NThing :title="item.renderKey" :description="item.renderValue" />
               <template #prefix>
-                  <div :class="systemMessage === item.renderValue ? 'bg-[#543BEF]' : ''">
-                    <NButton tertiary size="small" type="info" @click="submitSetting({ systemMessage: item.renderValue })">
-                      <span :class="systemMessage === item.renderValue ? 'text-[#ffffff]' : ''">
-                        {{ t(systemMessage === item.renderValue ? '使用中' : '设定') }}
+                  <div :class="systemMessage === item.value ? 'bg-[#543BEF]' : ''">
+                    <NButton tertiary size="small" type="info" @click="submitSetting({ systemMessage: item.value })">
+                      <span :class="systemMessage === item.value ? 'text-[#ffffff]' : ''">
+                        {{ systemMessage === item.value ? '使用中' : '设定' }}
                       </span>
                     </NButton>
                   </div>
