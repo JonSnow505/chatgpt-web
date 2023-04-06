@@ -5,7 +5,7 @@ import { SvgIcon } from '@/components/common'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { debounce } from '@/utils/functions/debounce'
-
+import  language  from '@/locales'
 const { isMobile } = useBasicLayout()
 
 const appStore = useAppStore()
@@ -56,7 +56,7 @@ function isActive(uuid: number) {
       <template v-if="!dataSources.length">
         <div class="flex flex-col items-center mt-4 text-center text-neutral-300">
           <SvgIcon icon="ri:inbox-line" class="mb-2 text-3xl" />
-          <span>{{ $t('common.noData') }}</span>
+          <span>{{ language.common.noData }}</span>
         </div>
       </template>
       <template v-else>
@@ -87,13 +87,13 @@ function isActive(uuid: number) {
                 <button class="p-1">
                   <SvgIcon icon="ri:edit-line" @click="handleEdit(item, true, $event)" />
                 </button>
-                <NPopconfirm placement="bottom" @positive-click="handleDeleteDebounce(index, $event)">
+                <NPopconfirm placement="bottom" :negative-text="language.common.cancel" :positive-text="language.common.confirm" @positive-click="handleDeleteDebounce(index, $event)">
                   <template #trigger>
                     <button class="p-1">
                       <SvgIcon icon="ri:delete-bin-line" />
                     </button>
                   </template>
-                  {{ $t('chat.deleteHistoryConfirm') }}
+                  {{ language.chat.deleteHistoryConfirm }}
                 </NPopconfirm>
               </template>
             </div>

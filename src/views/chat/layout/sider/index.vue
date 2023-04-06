@@ -6,6 +6,7 @@ import List from './List.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
+import language from '@/locales'
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
@@ -72,7 +73,7 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
-            {{ $t('chat.newChatButton') }}
+            {{ language.chat.newChatButton }}
           </NButton>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
@@ -81,11 +82,11 @@ watch(
         <div class="p-4">
           <div class="settingButton">
             <NButton block @click="settingCard = true">
-                    {{ $t('store.siderSettingButton') }}
+                    {{ language.store.siderSettingButton }}
               </NButton>
           </div>
           <NButton block @click="show = true">
-            {{ $t('store.siderShopButton') }}
+            {{ language.store.siderShopButton }}
           </NButton>
 
         </div>

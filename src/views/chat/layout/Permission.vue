@@ -4,7 +4,7 @@ import { NButton, NInput, NModal, useMessage } from 'naive-ui'
 import { fetchVerify } from '@/api'
 import { useAuthStore } from '@/store'
 import Icon403 from '@/icons/403.vue'
-
+import language from '@/locales'
 interface Props {
   visible: boolean
 }
@@ -60,7 +60,7 @@ function handlePress(event: KeyboardEvent) {
             403
           </h2>
           <p class="text-base text-center text-slate-500 dark:text-slate-500">
-            {{ $t('common.unauthorizedTips') }}
+            {{ language.common.unauthorizedTips }}
           </p>
           <Icon403 class="w-[200px] m-auto" />
         </header>
@@ -72,7 +72,7 @@ function handlePress(event: KeyboardEvent) {
           :loading="loading"
           @click="handleVerify"
         >
-          {{ $t('common.verify') }}
+          {{ language.common.verify }}
         </NButton>
       </div>
     </div>

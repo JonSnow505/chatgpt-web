@@ -6,7 +6,7 @@ import PromptRecommend from '../../../assets/recommend.json'
 import { SvgIcon } from '..'
 import { usePromptStore, useSettingStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
-import { t } from '@/locales'
+import language from '@/locales'
 import { SettingsState } from '@/store/modules/settings/helper'
 
 interface DataProps {
@@ -94,18 +94,19 @@ const inputStatus = computed (() => tempPromptKey.value.trim().length < 1 || tem
 
 // Prompt模板相关操作
 const addPromptTemplate = () => {
+  
   for (const i of promptList.value) {
     if (i.key === tempPromptKey.value) {
-      message.error(t('store.addRepeatTitleTips'))
+      message.error(language.store.addRepeatTitleTips)
       return
     }
     if (i.value === tempPromptValue.value) {
-      message.error(t('store.addRepeatContentTips', { msg: tempPromptKey.value }))
+      message.error( language.store.addRepeatContentTips + tempPromptKey.value)
       return
     }
   }
   promptList.value.unshift({ key: tempPromptKey.value, value: tempPromptValue.value } as never)
-  message.success(t('common.addSuccess'))
+  message.success(language.common.addSuccess)
   changeShowModal('add')
 }
 
@@ -124,17 +125,17 @@ const modifyPromptTemplate = () => {
   // 搜索有冲突的部分
   for (const i of tempList) {
     if (i.key === tempPromptKey.value) {
-      message.error(t('store.editRepeatTitleTips'))
+      message.error(language.store.editRepeatTitleTips)
       return
     }
     if (i.value === tempPromptValue.value) {
-      message.error(t('store.editRepeatContentTips', { msg: i.key }))
+      message.error( language.store.editRepeatContentTips+ i.key)
       return
     }
   }
 
   promptList.value = [{ key: tempPromptKey.value, value: tempPromptValue.value }, ...tempList] as never
-  message.success(t('common.editSuccess'))
+  message.success(language.common.editSuccess)
   changeShowModal('modify')
 }
 
@@ -142,12 +143,12 @@ const deletePromptTemplate = (row: { key: string; value: string }) => {
   promptList.value = [
     ...promptList.value.filter((item: { key: string; value: string }) => item.key !== row.key),
   ] as never
-  message.success(t('common.deleteSuccess'))
+  message.success(language.common.deleteSuccess)
 }
 
 const clearPromptTemplate = () => {
   promptList.value = []
-  message.success(t('common.clearSuccess'))
+  message.success(language.common.clearSuccess)
 }
 
 const importPromptTemplate = (from = 'online') => {
@@ -172,16 +173,16 @@ const importPromptTemplate = (from = 'online') => {
 
     for (const i of jsonData) {
       if (!(key in i) || !(value in i))
-        throw new Error(t('store.importError'))
+        throw new Error(language.store.importError)
       let safe = true
       for (const j of promptList.value) {
         if (j.key === i[key]) {
-          message.warning(t('store.importRepeatTitle', { msg: i[key] }))
+          message.warning(language.store.importRepeatTitle + i[key])
           safe = false
           break
         }
         if (j.value === i[value]) {
-          message.warning(t('store.importRepeatContent', { msg: i[key] }))
+          message.warning( language.store.importRepeatContent + i[key])
           safe = false
           break
         }
@@ -189,7 +190,7 @@ const importPromptTemplate = (from = 'online') => {
       if (safe)
         promptList.value.unshift({ key: i[key], value: i[value] } as never)
     }
-    message.success(t('common.importSuccess'))
+    message.success(language.common.importSuccess)
   }
   catch {
     message.error('JSON 格式错误，请检查 JSON 格式')
@@ -233,7 +234,7 @@ const downloadPromptTemplate = async () => {
     downloadURL.value = ''
   }
   catch {
-    message.error(t('store.downloadError'))
+    message.error(language.store.downloadError)
     downloadURL.value = ''
   }
   finally {
@@ -268,14 +269,14 @@ const submitSetting = (value: Partial<SettingsState>) => {
   }
   settingStore.updateSetting(value)
   systemMessage.value = value.systemMessage ?? ''
-  message.success(t('common.success'))
+  message.success(language.common.success)
 }
 
 // table相关
 const createColumns = (): DataTableColumns<DataProps> => {
   return [
     {
-      title: t('store.title'),
+      title: language.store.title,
       key: 'renderKey',
       render(row) {
         return h('div', { class: 'flex gap-2 leading-7' }, {
@@ -306,11 +307,11 @@ const createColumns = (): DataTableColumns<DataProps> => {
       },
     },
     {
-      title: t('store.description'),
+      title: language.store.description,
       key: 'renderValue',
     },
     {
-      title: t('common.action'),
+      title: language.common.action,
       key: 'actions',
       width: 100,
       align: 'center',
@@ -324,7 +325,7 @@ const createColumns = (): DataTableColumns<DataProps> => {
               type: 'info',
               onClick: () => changeShowModal('modify', row),
             },
-            { default: () => t('common.edit') },
+            { default: () => language.common.edit },
           ),
           h(
             NButton,
@@ -334,7 +335,7 @@ const createColumns = (): DataTableColumns<DataProps> => {
               type: 'error',
               onClick: () => deletePromptTemplate(row),
             },
-            { default: () => t('common.delete') },
+            { default: () => language.common.delete },
           ),
           ],
         })
@@ -369,7 +370,7 @@ const dataSource = computed(() => {
   <NModal v-model:show="show" style="width: 90%; max-width: 900px;" preset="card">
     <div class="space-y-4">
       <NTabs type="segment">
-        <NTabPane name="local" :tab="$t('store.local')">
+        <NTabPane name="local" :tab="language.store.local">
           <div
             class="flex gap-3 mb-4"
             :class="[isMobile ? 'flex-col' : 'flex-row justify-between']"
@@ -380,28 +381,28 @@ const dataSource = computed(() => {
                 size="small"
                 @click="changeShowModal('add')"
               >
-                {{ $t('common.add') }}
+                {{ language.common.add }}
               </NButton>
               <NButton
                 size="small"
                 @click="changeShowModal('local_import')"
               >
-                {{ $t('common.import') }}
+                {{ language.common.import }}
               </NButton>
               <NButton
                 size="small"
                 :loading="exportLoading"
                 @click="exportPromptTemplate()"
               >
-                {{ $t('common.export') }}
+                {{ language.common.export }}
               </NButton>
               <NPopconfirm @positive-click="clearPromptTemplate">
                 <template #trigger>
                   <NButton size="small">
-                    {{ $t('common.clear') }}
+                    {{ language.common.clear }}
                   </NButton>
                 </template>
-                {{ $t('store.clearStoreConfirm') }}
+                {{ language.store.clearStoreConfirm }}
               </NPopconfirm>
             </div>
             <div class="flex items-center">
@@ -431,19 +432,19 @@ const dataSource = computed(() => {
               <template #suffix>
                 <div class="flex flex-col items-center gap-2">
                   <NButton tertiary size="small" type="info" @click="changeShowModal('modify', item)">
-                    {{ t('common.edit') }}
+                    {{ language.common.edit }}
                   </NButton>
                   <NButton tertiary size="small" type="error" @click="deletePromptTemplate(item)">
-                    {{ t('common.delete') }}
+                    {{ language.common.delete }}
                   </NButton>
                 </div>
               </template>
             </NListItem>
           </NList>
         </NTabPane>
-        <NTabPane name="download" :tab="$t('store.online')">
+        <NTabPane name="download" :tab="language.store.online">
           <p class="mb-4">
-            {{ $t('store.onlineImportWarning') }}
+            {{ language.store.onlineImportWarning }}
           </p>
           <div class="flex items-center gap-4">
             <NInput v-model:value="downloadURL" placeholder="" />
@@ -454,7 +455,7 @@ const dataSource = computed(() => {
               :loading="importLoading"
               @click="downloadPromptTemplate()"
             >
-              {{ $t('common.download') }}
+              {{ language.common.download }}
             </NButton>
           </div>
           <NDivider />
@@ -495,9 +496,9 @@ const dataSource = computed(() => {
 
   <NModal v-model:show="showModal" style="width: 90%; max-width: 600px;" preset="card">
     <NSpace v-if="modalMode === 'add' || modalMode === 'modify'" vertical>
-      {{ t('store.title') }}
+      {{ language.store.title }}
       <NInput v-model:value="tempPromptKey" />
-      {{ t('store.description') }}
+      {{ language.store.description }}
       <NInput v-model:value="tempPromptValue" type="textarea" />
       <NButton
         block
@@ -505,13 +506,13 @@ const dataSource = computed(() => {
         :disabled="inputStatus"
         @click="() => { modalMode === 'add' ? addPromptTemplate() : modifyPromptTemplate() }"
       >
-        {{ t('common.confirm') }}
+        {{ language.common.confirm }}
       </NButton>
     </NSpace>
     <NSpace v-if="modalMode === 'local_import'" vertical>
       <NInput
         v-model:value="tempPromptValue"
-        :placeholder="t('store.importPlaceholder')"
+        :placeholder="language.store.importPlaceholder"
         :autosize="{ minRows: 3, maxRows: 15 }"
         type="textarea"
       />
@@ -521,7 +522,7 @@ const dataSource = computed(() => {
         :disabled="inputStatus"
         @click="() => { importPromptTemplate('local') }"
       >
-        {{ t('common.import') }}
+        {{ language.common.import }}
       </NButton>
     </NSpace>
   </NModal>

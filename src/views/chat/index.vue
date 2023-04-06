@@ -15,7 +15,7 @@ import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore, usePromptStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
-import { t } from '@/locales'
+import language from '@/locales'
 
 let controller = new AbortController()
 
@@ -156,7 +156,7 @@ async function onConversation() {
     await fetchChatAPIOnce()
   }
   catch (error: any) {
-    const errorMessage = error?.message ?? t('common.wrong')
+    const errorMessage = error?.message ?? language.common.wrong
 
     if (error.message === 'canceled') {
       updateChatSome(
@@ -294,7 +294,7 @@ async function onRegenerate(index: number) {
       return
     }
 
-    const errorMessage = error?.message ?? t('common.wrong')
+    const errorMessage = error?.message ?? language.common.wrong
 
     updateChat(
       +uuid,
@@ -320,10 +320,10 @@ function handleExport() {
     return
 
   const d = dialog.warning({
-    title: t('chat.exportImage'),
-    content: t('chat.exportImageConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
+    title: language.chat.exportImage,
+    content: language.chat.exportImageConfirm,
+    positiveText: language.common.yes,
+    negativeText: language.common.no,
     onPositiveClick: async () => {
       try {
         d.loading = true
@@ -344,11 +344,11 @@ function handleExport() {
         document.body.removeChild(tempLink)
         window.URL.revokeObjectURL(imgUrl)
         d.loading = false
-        ms.success(t('chat.exportSuccess'))
+        ms.success(language.chat.exportSuccess)
         Promise.resolve()
       }
       catch (error: any) {
-        ms.error(t('chat.exportFailed'))
+        ms.error(language.chat.exportFailed)
       }
       finally {
         d.loading = false
@@ -362,10 +362,10 @@ function handleDelete(index: number) {
     return
 
   dialog.warning({
-    title: t('chat.deleteMessage'),
-    content: t('chat.deleteMessageConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
+    title: language.chat.deleteMessage,
+    content: language.chat.deleteMessageConfirm,
+    positiveText: language.common.yes,
+    negativeText: language.common.no,
     onPositiveClick: () => {
       chatStore.deleteChatByUuid(+uuid, index)
     },
@@ -377,10 +377,10 @@ function handleClear() {
     return
 
   dialog.warning({
-    title: t('chat.clearChat'),
-    content: t('chat.clearChatConfirm'),
-    positiveText: t('common.yes'),
-    negativeText: t('common.no'),
+    title: language.chat.clearChat,
+    content: language.chat.clearChatConfirm,
+    positiveText: language.common.yes,
+    negativeText: language.common.no,
     onPositiveClick: () => {
       chatStore.clearChatByUuid(+uuid)
     },
@@ -437,8 +437,8 @@ const renderOption = (option: { label: string }) => {
 
 const placeholder = computed(() => {
   if (isMobile.value)
-    return t('chat.placeholderMobile')
-  return t('chat.placeholder')
+    return language.chat.placeholderMobile
+  return language.chat.placeholder
 })
 
 const buttonDisabled = computed(() => {

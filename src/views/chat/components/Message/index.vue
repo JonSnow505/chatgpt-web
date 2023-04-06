@@ -6,7 +6,7 @@ import TextComponent from './Text.vue'
 import { SvgIcon } from '@/components/common'
 import { copyText } from '@/utils/format'
 import { useIconRender } from '@/hooks/useIconRender'
-import { t } from '@/locales'
+import language from '@/locales'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 
 interface Props {
@@ -39,12 +39,12 @@ const messageRef = ref<HTMLElement>()
 const options = computed(() => {
   const common = [
     {
-      label: t('chat.copy'),
+      label: language.chat.copy,
       key: 'copyText',
       icon: iconRender({ icon: 'ri:file-copy-2-line' }),
     },
     {
-      label: t('common.delete'),
+      label: language.common.delete,
       key: 'delete',
       icon: iconRender({ icon: 'ri:delete-bin-line' }),
     },
@@ -52,7 +52,7 @@ const options = computed(() => {
 
   if (!props.inversion) {
     common.unshift({
-      label: asRawText.value ? t('chat.preview') : t('chat.showRawText'),
+      label: asRawText.value ? language.chat.preview : language.chat.showRawText,
       key: 'toggleRenderType',
       icon: iconRender({ icon: asRawText.value ? 'ic:outline-code-off' : 'ic:outline-code' }),
     })
