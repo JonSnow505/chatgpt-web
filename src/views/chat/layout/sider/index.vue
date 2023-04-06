@@ -1,21 +1,21 @@
 <script setup lang='ts'>
 import type { CSSProperties } from 'vue'
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch , defineAsyncComponent } from 'vue'
 import { NButton, NLayoutSider } from 'naive-ui'
 import List from './List.vue'
-import Footer from './Footer.vue'
 import { useAppStore, useChatStore } from '@/store'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { PromptStore } from '@/components/common'
+import language from '@/locales'
 
 const appStore = useAppStore()
 const chatStore = useChatStore()
 
 const { isMobile } = useBasicLayout()
 const show = ref(false)
-
+const settingCard = ref(false)
 const collapsed = computed(() => appStore.siderCollapsed)
-
+const Setting = defineAsyncComponent(() => import('@/components/common/Setting/index.vue'))
 function handleAdd() {
   chatStore.addHistory({ title: 'New Chat', uuid: Date.now(), isEdit: false })
   if (isMobile.value)
@@ -73,19 +73,25 @@ watch(
       <main class="flex flex-col flex-1 min-h-0">
         <div class="p-4">
           <NButton dashed block @click="handleAdd">
-            {{ $t('chat.newChatButton') }}
+            {{ language.chat.newChatButton }}
           </NButton>
         </div>
         <div class="flex-1 min-h-0 pb-4 overflow-hidden">
           <List />
         </div>
         <div class="p-4">
+          <div class="settingButton">
+            <NButton block @click="settingCard = true">
+                    {{ language.store.siderSettingButton }}
+              </NButton>
+          </div>
           <NButton block @click="show = true">
-            {{ $t('store.siderButton') }}
+            {{ language.store.siderShopButton }}
           </NButton>
+
         </div>
       </main>
-      <Footer />
+      <Setting v-if="settingCard" v-model:visible="settingCard" />
     </div>
   </NLayoutSider>
   <template v-if="isMobile">
@@ -93,3 +99,9 @@ watch(
   </template>
   <PromptStore v-model:visible="show" />
 </template>
+
+<style>
+.settingButton {
+  margin-bottom: 15px;
+}
+</style>
