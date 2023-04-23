@@ -25,15 +25,21 @@ router.post('/chat-process', [auth, limiter], async (req, res) => {
   try {
     const { prompt, options = {}, systemMessage } = req.body as RequestProps
     let firstChunk = true
-    await chatReplyProcess({
-      message: prompt,
-      lastContext: options,
-      process: (chat: ChatMessage) => {
-        res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
-        firstChunk = false
-      },
-      systemMessage,
-    })
+    if (prompt.includes('我希望你能担任中文翻译') || systemMessage.includes('translates text')) {
+      const chat = { text: '哟嚯，用咱产品来翻译来着？请自行购买chatgpt账号使用，本站仅供iShield前期测试！' }
+      res.write(JSON.stringify(chat))
+    }
+    else {
+      await chatReplyProcess({
+        message: prompt,
+        lastContext: options,
+        process: (chat: ChatMessage) => {
+          res.write(firstChunk ? JSON.stringify(chat) : `\n${JSON.stringify(chat)}`)
+          firstChunk = false
+        },
+        systemMessage,
+      })
+    }
   }
   catch (error) {
     res.write(JSON.stringify(error))
